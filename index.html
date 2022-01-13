@@ -64,9 +64,17 @@
 
 
 
-    myMessage.methods.getMessage().call().then(a => console.log(a));
+    myMessage.methods.getMessage().call().then(function (message) {
+      var h1 = document.querySelector('h2');
+      h1.innerHTML = message;
+    })
+
+
 
   </script>
+
+  <h2></h2>
 </body>
+
 
 </html>
