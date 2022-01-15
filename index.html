@@ -7,15 +7,24 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Deploy a Remix Contract</title>
 
-  <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
+  <link rel="stylesheet" type="text/css" href="main.css">
 
   <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
 </head>
 
 <body>
   <div>
-    <h1>Deploy a Remix Contract</h1>
+    <h1>Ethereum Secret Messenger</h1>
+    <hr>
+
+    <label for="message">This site writes a secret message to the Ethereum
+      blockchain!</label>
+    <input id="userInput" type="text">
+
+    <button id="setMessageButton">Set secret message</button>
   </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
   <script>
 
@@ -29,9 +38,9 @@
     // Set a default account
     web3.eth.defaultAccount = web3.eth.accounts[0];
 
-    // Get the contract abi 
-    var myMessage = new web3.eth.Contract(
-      [{
+    // Get the contract address
+    var myMessage = new web3.eth.Contract([
+      {
         "constant": false,
         "inputs": [
           {
@@ -58,23 +67,30 @@
         "payable": false,
         "stateMutability": "view",
         "type": "function"
-      }],
-      '0x4D14dD15ecB5aAcB5891f5BBe3a17Df1F6cCB0eb'
+      }
+    ],
+      '0x111c5d5Ac416bD829a8b242a36919DA8Ac0Ba96b'
     );
 
+    // myMessage.methods.getMessage().call().then(function (m) {
+    //   console.log(m)
+    // })
 
+    $("#setMessageButton").click(function () {
+      myMessage.methods.setMessage($("#userInput").val()).send({ from: "0x99C0CF1730684322c1Db6A8dBADB9dFdCC142da7" })
+        .then(function (r) {
+          console.log("sending...")
+          console.log(r)
+        }).catch(function (e) {
+          console.log("error  " + e)
+        })
+    });
 
-    myMessage.methods.getMessage().call().then(function (message) {
-      var h1 = document.querySelector('h2');
-      h1.innerHTML = message;
+    myMessage.methods.getMessage().call().then(function (m) {
+      console.log("reading message from contract " + m)
     })
 
-
-
   </script>
-
-  <h2></h2>
 </body>
-
 
 </html>
